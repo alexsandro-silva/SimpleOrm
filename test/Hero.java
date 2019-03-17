@@ -16,9 +16,11 @@
  */
 
 import br.com.simpleOrm.annotations.Column;
+import br.com.simpleOrm.annotations.Entity;
 import br.com.simpleOrm.annotations.Id;
 import br.com.simpleOrm.annotations.Table;
 
+@Entity
 @Table("Hero")
 public class Hero {
     @Id

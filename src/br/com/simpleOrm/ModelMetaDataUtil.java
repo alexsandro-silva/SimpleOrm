@@ -18,6 +18,7 @@
 package br.com.simpleOrm;
 
 import br.com.simpleOrm.annotations.Database;
+import br.com.simpleOrm.annotations.Entity;
 import br.com.simpleOrm.annotations.Id;
 import br.com.simpleOrm.annotations.Table;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,9 @@ public class ModelMetaDataUtil {
     private static final String DEFAULT_DB = "DEFAULT";
 
     public static <T> ModelMetaData getMetaDataOf(T t) {
+        if (! isEntity(t.getClass()))
+            throw new RuntimeException(String.format("A classe %s não representa uma entidade", t.getClass().getName()));
+
         String dbName = getDbName(t.getClass());
         String tableName = getTableName(t.getClass());
         List<ColumnMetaData> columns = getColumns(t);
@@ -76,5 +80,9 @@ public class ModelMetaDataUtil {
         }
 
         return metaData;
+    }
+
+    private static <T> boolean isEntity(Class<T> tClass) {
+        return tClass.isAnnotationPresent(Entity.class);
     }
 }
