@@ -16,8 +16,8 @@
  */
 
 import br.com.simpleOrm.ColumnMetaData;
-import br.com.simpleOrm.ModelMetaData;
-import br.com.simpleOrm.ModelMetaDataUtil;
+import br.com.simpleOrm.EntityMetaData;
+import br.com.simpleOrm.EntityUtil;
 
 public class Run {
 
@@ -26,7 +26,7 @@ public class Run {
         hero.setId(1);
         hero.setCivilianName("Peter Parker");
         hero.setHeroName("Spiderman");
-        ModelMetaData mmd = ModelMetaDataUtil.getMetaDataOf(hero);
+        EntityMetaData mmd = EntityUtil.getMetaDataOf(hero);
 
         System.out.println(mmd.getDbName());
         System.out.println(mmd.getTableName());
@@ -34,5 +34,7 @@ public class Run {
         for (ColumnMetaData cmd : mmd.getColumns()) {
             System.out.println(cmd.getName() + " - " + cmd.getValue() + " - " + cmd.isId());
         }
+
+        mmd.getColumnsAndValues().forEach((key, value) -> System.out.println(key + " = " + value));
     }
 }

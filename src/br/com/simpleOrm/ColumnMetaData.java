@@ -20,6 +20,7 @@ package br.com.simpleOrm;
 public class ColumnMetaData {
 
     private String name;
+    private String javaName;
     private Object value;
     private boolean isId;
 
@@ -29,6 +30,14 @@ public class ColumnMetaData {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getJavaName() {
+        return javaName;
+    }
+
+    public void setJavaName(String javaName) {
+        this.javaName = javaName;
     }
 
     public Object getValue() {

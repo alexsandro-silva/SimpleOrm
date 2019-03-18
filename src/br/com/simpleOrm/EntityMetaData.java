@@ -17,16 +17,18 @@
 
 package br.com.simpleOrm;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ModelMetaData {
+public class EntityMetaData {
 
     private String dbName;
     private String tableName;
     private List<ColumnMetaData> columns;
 
-    public ModelMetaData(String dbName, String tableName, List<ColumnMetaData> columns) {
+    public EntityMetaData(String dbName, String tableName, List<ColumnMetaData> columns) {
         this.dbName = dbName;
         this.tableName = tableName;
         this.columns = columns;
@@ -54,5 +56,34 @@ public class ModelMetaData {
 
     public void setColumns(List<ColumnMetaData> columns) {
         this.columns = columns;
+    }
+
+    public Map<String, Object> getColumnsAndValues() {
+        Map<String, Object> columnsAndValues = new HashMap<>();
+        getColumns().forEach(column -> {
+            columnsAndValues.put(column.getName(), column.getValue());
+        });
+
+        return columnsAndValues;
+    }
+
+    public List<String> getColumnsList() {
+        List<String> columns = new ArrayList<>();
+        getColumns().forEach(column -> {
+            columns.add(column.getName());
+        });
+
+        return columns;
+    }
+
+    public String getattributeNameByDbColumnName(String dbColumnName) {
+        String javaName = "";
+        for (int i = 0; i < getColumns().size(); i++) {
+            if (getColumns().get(i).getName().equals(dbColumnName)) {
+                javaName = getColumns().get(i).getJavaName();
+                break;
+            }
+        }
+        return javaName;
     }
 }

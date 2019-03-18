@@ -17,22 +17,20 @@
 
 package br.com.simpleOrm;
 
-import br.com.simpleOrm.annotations.Database;
-import br.com.simpleOrm.annotations.Entity;
-import br.com.simpleOrm.annotations.Id;
-import br.com.simpleOrm.annotations.Table;
+import br.com.simpleOrm.annotations.*;
+import br.com.simpleOrm.database.DB;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ModelMetaDataUtil {
+public class EntityUtil {
 
-    private static final String DEFAULT_DB = "DEFAULT";
-
-    public static <T> ModelMetaData getMetaDataOf(T t) {
+    public static <T> EntityMetaData getMetaDataOf(@NotNull T t) {
         if (! isEntity(t.getClass()))
             throw new RuntimeException(String.format("A classe %s não representa uma entidade", t.getClass().getName()));
 
@@ -40,7 +38,7 @@ public class ModelMetaDataUtil {
         String tableName = getTableName(t.getClass());
         List<ColumnMetaData> columns = getColumns(t);
 
-        ModelMetaData modelMetaData = new ModelMetaData(dbName, tableName, columns);
+        EntityMetaData modelMetaData = new EntityMetaData(dbName, tableName, columns);
 
         return modelMetaData;
     }
@@ -51,7 +49,7 @@ public class ModelMetaDataUtil {
             return ((Database) annotation).value();
         }
 
-        return DEFAULT_DB;
+        return DB.DEFAULT;
     }
 
     private static <T> String getTableName(@NotNull Class<T> tClass) {
@@ -66,23 +64,25 @@ public class ModelMetaDataUtil {
     private static <T> List<ColumnMetaData> getColumns(@NotNull T t) {
         List<ColumnMetaData> metaData = new ArrayList<>();
         for (Field field : t.getClass().getDeclaredFields()) {
-            field.setAccessible(true);
-            ColumnMetaData columnMetaData = new ColumnMetaData();
-            columnMetaData.setName(field.getName());
-            try {
-                columnMetaData.setValue(field.get(t));
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e.getMessage());
+            if (field.isAnnotationPresent(Column.class)) {
+                field.setAccessible(true);
+                ColumnMetaData columnMetaData = new ColumnMetaData();
+                columnMetaData.setName(((Column) field.getAnnotation(Column.class)).name());
+                columnMetaData.setJavaName(field.getName());
+                try {
+                    columnMetaData.setValue(field.get(t));
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+                columnMetaData.setId(field.isAnnotationPresent(Id.class));
+                metaData.add(columnMetaData);
             }
-            columnMetaData.setId(field.isAnnotationPresent(Id.class));
-
-            metaData.add(columnMetaData);
         }
 
         return metaData;
     }
 
-    private static <T> boolean isEntity(Class<T> tClass) {
+    private static <T> boolean isEntity(@NotNull Class<T> tClass) {
         return tClass.isAnnotationPresent(Entity.class);
     }
 }
