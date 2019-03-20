@@ -30,7 +30,7 @@ public abstract class Sql {
     protected List<Object> whereValues = new ArrayList<>();
 
     public Sql where(String condition, Object... parameters) {
-        if (condition == null || condition.isBlank() || parameters.length == 0) {
+        if (condition == null || condition.isEmpty() || parameters.length == 0) {
             throw new IllegalArgumentException("Parâmetros da cláusula where não fornecidos");
         }
 
@@ -49,5 +49,5 @@ public abstract class Sql {
         return "set".concat(name.substring(0, 1).toUpperCase()).concat(name.substring(1, name.length()));
     }
 
-    public abstract List<?> exec();
+    public abstract List<? extends Object> exec();
 }

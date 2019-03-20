@@ -33,10 +33,10 @@ public class LogFormatter extends Formatter {
     @Override
     public String format(LogRecord record) {
         StringBuilder builder = new StringBuilder();
-        builder.append(DATE_FORMAT.format(new Date(record.getMillis()))).append(" - ");
+        builder.append("[").append(record.getLevel()).append("] - ");
+        builder.append("[").append(DATE_FORMAT.format(new Date(record.getMillis()))).append("] - ");
         builder.append("[").append(record.getSourceClassName()).append(".");
         builder.append(record.getSourceMethodName()).append("] - ");
-        builder.append("[").append(record.getLevel()).append("] - ");
         builder.append(formatMessage(record));
         builder.append("\n");
 

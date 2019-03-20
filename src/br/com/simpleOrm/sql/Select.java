@@ -33,13 +33,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Select <T> extends Sql {
+public class Select extends Sql {
 
     private static final Logger logger = LogManager.getLogger(Select.class.getName());
-    private Class<T> entityClass;
+    private Class<? extends Object> entityClass;
     private EntityMetaData emd;
 
-    public Select(Class<T> entityClass) {
+    public Select(Class<? extends Object> entityClass) {
         this.entityClass = entityClass;
         this.emd = getMetaDataOf(entityClass);
     }
@@ -52,11 +52,11 @@ public class Select <T> extends Sql {
         sql.append(! where.isEmpty() ? " WHERE " + where : " ");
 
         ResultSet rs = new DB(emd.getDbName()).executeSelect(sql.toString(), whereValues);
-        List<T> result = new ArrayList<>();
+        List<? extends Object> result = new ArrayList<>();
         try {
             //Constructor<T> constructor = entityClass.getConstructor();
             while (rs.next()) {
-                T entity = ReflectionUtil.createInstance(entityClass);
+                Object entity = ReflectionUtil.createInstance(entityClass);
                 for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
                     //todo implementar lógica
                     setObjectValue(

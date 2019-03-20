@@ -18,6 +18,7 @@
 package br.com.simpleOrm.database;
 
 import br.com.simpleOrm.logging.LogManager;
+import br.com.simpleOrm.sql.Select;
 
 import java.sql.*;
 import java.util.List;
@@ -42,7 +43,7 @@ public class DB {
     public DB open(String driver, String url, String user, String password) {
         try {
             Class.forName(driver);
-            Connection connection = DriverManager.getConnection(url);
+            Connection connection = DriverManager.getConnection(url, user, password);
             ConnectionManager.addConnection(dbName, connection);
         } catch (ClassNotFoundException | SQLException e) {
             logger.log(Level.SEVERE, "Falha na conexão com a base {0}", dbName);
@@ -78,5 +79,10 @@ public class DB {
         }
 
         return ps;
+    }
+
+    public Select select(Class<? extends Object> tClass) {
+        Select select = new Select(tClass);
+        return select;
     }
 }
