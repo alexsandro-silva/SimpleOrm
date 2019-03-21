@@ -28,13 +28,13 @@ import java.util.List;
 
 public class EntityUtil {
 
-    public static <T> EntityMetaData getMetaDataOf(@NotNull T t) {
-        if (! isEntity(t.getClass()))
-            throw new RuntimeException(String.format("A classe %s não representa uma entidade", t.getClass().getName()));
+    public static <T> EntityMetaData getMetaDataOf(@NotNull Class<T> tClass) {
+        if (! isEntity(tClass))
+            throw new RuntimeException(String.format("A classe %s não representa uma entidade", tClass.getClass().getName()));
 
-        String dbName = getDbName(t.getClass());
-        String tableName = getTableName(t.getClass());
-        List<ColumnMetaData> columns = getColumns(t);
+        String dbName = getDbName(tClass);
+        String tableName = getTableName(tClass);
+        List<ColumnMetaData> columns = getColumns(tClass);
 
         EntityMetaData modelMetaData = new EntityMetaData(dbName, tableName, columns);
 
@@ -59,19 +59,19 @@ public class EntityUtil {
         return tClass.getSimpleName();
     }
 
-    private static <T> List<ColumnMetaData> getColumns(@NotNull T t) {
+    private static <T> List<ColumnMetaData> getColumns(@NotNull Class<T> t) {
         List<ColumnMetaData> metaData = new ArrayList<>();
-        for (Field field : t.getClass().getDeclaredFields()) {
+        for (Field field : t.getDeclaredFields()) {
             if (field.isAnnotationPresent(Column.class)) {
                 field.setAccessible(true);
                 ColumnMetaData columnMetaData = new ColumnMetaData();
                 columnMetaData.setName(((Column) field.getAnnotation(Column.class)).name());
                 columnMetaData.setJavaName(field.getName());
-                try {
+/*                try {
                     columnMetaData.setValue(field.get(t));
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException(e.getMessage());
-                }
+                }*/
                 columnMetaData.setId(field.isAnnotationPresent(Id.class));
                 metaData.add(columnMetaData);
             }

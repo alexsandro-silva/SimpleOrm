@@ -18,11 +18,24 @@
 import br.com.simpleOrm.database.Base;
 import br.com.simpleOrm.database.DB;
 
+import java.util.List;
+
 public class TesteDB {
 
     public static void main(String[] args) {
         Base.open("org.mariadb.jdbc.Driver", "jdbc:mariadb://localhost/heroes", "root", "");
 
-        Base.select(Hero.class);
+        List<?> heroes = Base.select(Hero.class).exec();
+
+        for (int i = 1; i <heroes.size(); i++) {
+            String.format("ID: %s - %s - %s", heroes.get(i), heroes.get(2), heroes.get((3)));
+        }
+        heroes.forEach((h) -> {
+            Hero hero = (Hero) h;
+            System.out.println(String.format("ID: %s - %s - %s", hero.getId(), hero.getCivilianName(), hero.getHeroName()));
+        });
+
+
+
     }
 }

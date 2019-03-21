@@ -26,7 +26,7 @@ public class Run {
         hero.setId(1);
         hero.setCivilianName("Peter Parker");
         hero.setHeroName("Spiderman");
-        EntityMetaData mmd = EntityUtil.getMetaDataOf(hero);
+        EntityMetaData mmd = EntityUtil.getMetaDataOf(hero.getClass());
 
         System.out.println(mmd.getDbName());
         System.out.println(mmd.getTableName());

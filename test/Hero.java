@@ -21,21 +21,21 @@ import br.com.simpleOrm.annotations.Id;
 import br.com.simpleOrm.annotations.Table;
 
 @Entity
-@Table("Hero")
+@Table("hero")
 public class Hero {
     @Id
     @Column(name = "id")
-    private int id;
+    private Integer id;
     @Column(name = "civilian_name")
     private String civilianName;
     @Column(name = "hero_name")
     private String heroName;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

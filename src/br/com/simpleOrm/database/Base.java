@@ -26,7 +26,7 @@ public class Base {
         return db.open(driver, url, user, password);
     }
 
-    public static Select select(Class<? extends Object> tClass) {
+    public static <T> Select select(Class<T> tClass) {
         return new DB().select(tClass);
     }
 }

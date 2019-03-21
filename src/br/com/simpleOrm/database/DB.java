@@ -81,7 +81,7 @@ public class DB {
         return ps;
     }
 
-    public Select select(Class<? extends Object> tClass) {
+    public <T> Select select(Class<T> tClass) {
         Select select = new Select(tClass);
         return select;
     }
