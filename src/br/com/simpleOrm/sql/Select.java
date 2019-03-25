@@ -18,15 +18,12 @@
 package br.com.simpleOrm.sql;
 
 import br.com.simpleOrm.EntityMetaData;
-import br.com.simpleOrm.annotations.Column;
 import br.com.simpleOrm.database.DB;
 import br.com.simpleOrm.logging.LogManager;
 import br.com.simpleOrm.util.ReflectionUtil;
 
 import static br.com.simpleOrm.EntityUtil.getMetaDataOf;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,14 +42,14 @@ public class Select extends Sql {
     }
 
     @Override
-    public List<?> exec() {
+    public List<? extends Object> exec() {
         StringBuilder sql = new StringBuilder("SELECT ");
         sql.append(String.join(", ", emd.getColumnsList())).append(" ");
         sql.append("FROM ").append(emd.getTableName());
         sql.append(! where.isEmpty() ? " WHERE " + where : " ");
 
         ResultSet rs = new DB(emd.getDbName()).executeSelect(sql.toString(), whereValues);
-        List<? extends Object> result = new ArrayList<>();
+        List<Object> result = new ArrayList<>();
         try {
             //Constructor<T> constructor = entityClass.getConstructor();
             while (rs.next()) {
@@ -64,10 +61,11 @@ public class Select extends Sql {
                             entity, rs.getObject(i)
                     );
                 }
+                result.add(entity);
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage());
         }
-        return null;
+        return result;
     }
 }

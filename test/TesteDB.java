@@ -25,7 +25,7 @@ public class TesteDB {
     public static void main(String[] args) {
         Base.open("org.mariadb.jdbc.Driver", "jdbc:mariadb://localhost/heroes", "root", "");
 
-        List<?> heroes = Base.select(Hero.class).exec();
+        List<? extends Object> heroes = Base.select(Hero.class).exec();
 
         for (int i = 1; i <heroes.size(); i++) {
             String.format("ID: %s - %s - %s", heroes.get(i), heroes.get(2), heroes.get((3)));
